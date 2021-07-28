@@ -9,32 +9,48 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import LottieView from 'lottie-react-native';
-import helicopter from './assets/helicopter.json';
+const helicopter = require('./assets/helicopter.json');
+const benchmark = require('./assets/benchmark.json');
+const sun = require('./assets/sun.json');
+const pharma = require('./assets/pharma.json');
+const jets = require('./assets/jets.json');
 
 const image = {
   uri: 'https://img.buzzfeed.com/buzzfeed-static/static/2020-02/14/21/enhanced/553ef1e26c9a/enhanced-372-1581714965-4.png',
 };
 
 export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {currentAnimation: 'helicopter'};
+  }
   componentDidMount() {
-    // this.animation.play(2, 60);
+    // this.playAnimation();
     // Or set a specific startFrame and endFrame with:
   }
 
-  // playAnimation = () => {
-  //   this.animation.play();
-  // };
+  playAnimation = () => {
+    this.resetAnimation();
 
-  // resetAnimation = () => {
-  //   this.animation.reset();
-  // };
+    this.animation.play();
+  };
+
+  resetAnimation = () => {
+    this.animation.reset();
+  };
 
   alertBox = () => {
     Alert.alert(
       'Hey There!',
       'Two button alert dialog',
       [
-        {text: 'Yes', onPress: () => this.animation.play()},
+        {
+          text: 'Yes',
+          onPress: () => {
+            this.playAnimation();
+            // this.resetAnimation();
+          },
+        },
         {
           text: 'No',
           onPress: () => this.animation.reset(),
@@ -47,13 +63,56 @@ export default class App extends React.Component {
     );
   };
 
+  // passAnimation = () => {
+  //   switch (this.state.currentAnimation) {
+  //     case 'pharma':
+  //       pharma;
+  //       break;
+  //     case 'helicopter':
+  //       helicopter;
+  //       break;
+  //     case 'benchmark':
+  //       benchmark;
+  //       break;
+  //     case 'jets':
+  //       jets;
+  //       break;
+  //     default:
+  //       'sun';
+  //       sun;
+  //   }
+  // };
+
   render() {
+    const {currentAnimation} = this.state;
+
     return (
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-        <LottieView style={styles.animationContainer}>
+        <View style={styles.animationContainer}>
           {/* <TouchableOpacity onPress={this.alertBox} activeOpacity={0.9}> */}
 
           <LottieView
+            // source={this.passAnimation()}
+            source={
+              currentAnimation === 'helicopter'
+                ? helicopter
+                : currentAnimation === 'benchmark'
+                ? benchmark
+                : currentAnimation === 'pharma'
+                ? pharma
+                : currentAnimation === 'jets'
+                ? jets
+                : sun
+            }
+            // resizeMode="cover"
+            ref={animation => {
+              this.animation = animation;
+            }}
+            loop={true}
+            // autoPlay={false}
+          />
+
+          {/* <LottieView
             ref={animation => {
               this.animation = animation;
             }}
@@ -71,7 +130,7 @@ export default class App extends React.Component {
 
             // OR find more Lottie files @ https://lottiefiles.com/featured
             // Just click the one you like, place that file in the 'assets' folder to the left, and replace the above 'require' statement
-          />
+          /> */}
           {/* <LottieView
             ref={animation => {
               this.animation = animation;
@@ -95,28 +154,67 @@ export default class App extends React.Component {
             <Button
               style={styles.pharmaStyle}
               title=""
-              onPress={this.alertBox}
+              onPress={() => {
+                this.setState({currentAnimation: 'pharma'});
+
+                this.alertBox();
+
+                //
+                // // this.resetAnimation();
+              }}
             />
           </View>
 
           <View style={styles.jetsContainer}>
-            <Button style={styles.playStyle} title="" onPress={this.alertBox} />
+            <Button
+              style={styles.pharmaStyle}
+              title=""
+              onPress={() => {
+                this.setState({currentAnimation: 'helicopter'});
+                this.alertBox();
+                // this.resetAnimation();
+              }}
+            />
           </View>
 
           <View style={styles.sunContainer}>
-            <Button style={styles.playStyle} title="" onPress={this.alertBox} />
+            <Button
+              style={styles.playStyle}
+              title=""
+              onPress={() => {
+                this.setState({currentAnimation: 'sun'});
+                this.alertBox();
+                // this.resetAnimation();
+              }}
+            />
           </View>
 
           <View style={styles.benchmarkContainer}>
-            <Button style={styles.playStyle} title="" onPress={this.alertBox} />
+            <Button
+              style={styles.playStyle}
+              title=""
+              onPress={() => {
+                this.setState({currentAnimation: 'benchmark'});
+                this.alertBox();
+                // this.resetAnimation();
+              }}
+            />
           </View>
 
           <View style={styles.clinicContainer}>
-            <Button style={styles.playStyle} title="" onPress={this.alertBox} />
+            <Button
+              style={styles.playStyle}
+              title=""
+              onPress={() => {
+                this.setState({currentAnimation: 'jets'});
+                this.alertBox();
+                // this.resetAnimation();
+              }}
+            />
           </View>
 
           {/* </TouchableOpacity> */}
-        </LottieView>
+        </View>
       </ImageBackground>
     );
   }
