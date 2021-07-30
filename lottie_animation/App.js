@@ -211,7 +211,7 @@ export default class App extends React.Component {
             style={styles.playStyle}
             title=""
             onPress={() => {
-              this.setState({currentAnimation: 'benchmark'});
+              this.setState({currentAnimation: 'clinic'});
               this.setModalVisible(true);
 
               // this.alertBox();
@@ -259,8 +259,8 @@ const styles = StyleSheet.create({
     // marginRight: 40,
     position: 'absolute',
 
-    top: 400,
-    left: 160,
+    top: 640,
+    left: 235,
     // width: 100,
     // height: 50,
     width: 25,
@@ -276,8 +276,8 @@ const styles = StyleSheet.create({
   jetsContainer: {
     position: 'absolute',
 
-    top: 200,
-    left: 100,
+    top: 210,
+    left: 265,
     // width: 100,
     // height: 50,
     width: 25,
@@ -301,8 +301,8 @@ const styles = StyleSheet.create({
   benchmarkContainer: {
     position: 'absolute',
 
-    top: 300,
-    left: 50,
+    top: 500,
+    left: 130,
     // width: 100,
     // height: 50,
     width: 25,
@@ -317,8 +317,8 @@ const styles = StyleSheet.create({
   sunContainer: {
     position: 'absolute',
 
-    top: 150,
-    left: 250,
+    top: 50,
+    left: 230,
     // width: 100,
     // height: 50,
     width: 25,
@@ -333,8 +333,8 @@ const styles = StyleSheet.create({
   clinicContainer: {
     position: 'absolute',
 
-    top: 375,
-    left: 200,
+    top: 180,
+    left: 80,
     // width: 100,
     // height: 50,
     width: 25,
