@@ -4,25 +4,24 @@ import {
   Button,
   StyleSheet,
   View,
+  Modal,
   Alert,
-  ImageBackground,
-  TouchableOpacity,
+  Pressable,
+  Text,
 } from 'react-native';
 import LottieView from 'lottie-react-native';
-const helicopter = require('./assets/helicopter.json');
-const benchmark = require('./assets/benchmark.json');
-const sun = require('./assets/sun.json');
-const pharma = require('./assets/pharma.json');
-const jets = require('./assets/jets.json');
 
-const image = {
-  uri: 'https://img.buzzfeed.com/buzzfeed-static/static/2020-02/14/21/enhanced/553ef1e26c9a/enhanced-372-1581714965-4.png',
-};
+const helicopter = require('./assets/helicopter-animation.json');
+const benchmark = require('./assets/plane-animation.json');
+const sun = require('./assets/sun-animation.json');
+const pharma = require('./assets/pharma-animation.json');
+const jets = require('./assets/bsw-animation.json');
+const clinic = require('./assets/clinic-animation.json');
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {currentAnimation: 'helicopter'};
+    this.state = {currentAnimation: 'helicopter', modalVisible: false};
   }
   componentDidMount() {
     // this.playAnimation();
@@ -40,27 +39,7 @@ export default class App extends React.Component {
   };
 
   alertBox = () => {
-    Alert.alert(
-      'Hey There!',
-      'Two button alert dialog',
-      [
-        {
-          text: 'Yes',
-          onPress: () => {
-            this.playAnimation();
-            // this.resetAnimation();
-          },
-        },
-        {
-          text: 'No',
-          onPress: () => this.animation.reset(),
-          // style: 'cancel',
-        },
-      ],
-      {
-        cancelable: true,
-      },
-    );
+    // console.log('xyz')
   };
 
   // passAnimation = () => {
@@ -82,37 +61,71 @@ export default class App extends React.Component {
   //       sun;
   //   }
   // };
+  setModalVisible = visible => {
+    this.setState({modalVisible: visible});
+  };
 
   render() {
+    const {modalVisible} = this.state;
+
     const {currentAnimation} = this.state;
 
     return (
-      <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-        <View style={styles.animationContainer}>
-          {/* <TouchableOpacity onPress={this.alertBox} activeOpacity={0.9}> */}
+      <View style={styles.animationContainer}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+            this.setModalVisible(!modalVisible);
+          }}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Hello there!</Text>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => {
+                  this.setModalVisible(!modalVisible);
+                  this.playAnimation();
+                }}>
+                <Text style={styles.textStyle}>play</Text>
+              </Pressable>
 
-          <LottieView
-            // source={this.passAnimation()}
-            source={
-              currentAnimation === 'helicopter'
-                ? helicopter
-                : currentAnimation === 'benchmark'
-                ? benchmark
-                : currentAnimation === 'pharma'
-                ? pharma
-                : currentAnimation === 'jets'
-                ? jets
-                : sun
-            }
-            // resizeMode="cover"
-            ref={animation => {
-              this.animation = animation;
-            }}
-            loop={true}
-            // autoPlay={false}
-          />
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => this.setModalVisible(!modalVisible)}>
+                <Text style={styles.textStyle}>Hide</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+        {/* <TouchableOpacity onPress={this.alertBox} activeOpacity={0.9}> */}
 
-          {/* <LottieView
+        <LottieView
+          // source={this.passAnimation()}
+          source={
+            currentAnimation === 'helicopter'
+              ? helicopter
+              : currentAnimation === 'benchmark'
+              ? benchmark
+              : currentAnimation === 'pharma'
+              ? pharma
+              : currentAnimation === 'jets'
+              ? jets
+              : currentAnimation === 'clinic'
+              ? clinic
+              : sun
+          }
+          // resizeMode="cover"
+          ref={animation => {
+            this.animation = animation;
+          }}
+          loop={true}
+          // autoPlay={false}
+        />
+
+        {/* <LottieView
             ref={animation => {
               this.animation = animation;
             }}
@@ -131,7 +144,7 @@ export default class App extends React.Component {
             // OR find more Lottie files @ https://lottiefiles.com/featured
             // Just click the one you like, place that file in the 'assets' folder to the left, and replace the above 'require' statement
           /> */}
-          {/* <LottieView
+        {/* <LottieView
             ref={animation => {
               this.animation = animation;
             }}
@@ -150,72 +163,79 @@ export default class App extends React.Component {
             // OR find more Lottie files @ https://lottiefiles.com/featured
             // Just click the one you like, place that file in the 'assets' folder to the left, and replace the above 'require' statement
           /> */}
-          <View style={styles.buttonContainer}>
-            <Button
-              style={styles.pharmaStyle}
-              title=""
-              onPress={() => {
-                this.setState({currentAnimation: 'pharma'});
+        <View style={styles.buttonContainer}>
+          <Button
+            style={styles.pharmaStyle}
+            title=""
+            onPress={() => {
+              this.setState({currentAnimation: 'pharma'});
+              this.setModalVisible(true);
+              // this.alertBox();
 
-                this.alertBox();
-
-                //
-                // // this.resetAnimation();
-              }}
-            />
-          </View>
-
-          <View style={styles.jetsContainer}>
-            <Button
-              style={styles.pharmaStyle}
-              title=""
-              onPress={() => {
-                this.setState({currentAnimation: 'helicopter'});
-                this.alertBox();
-                // this.resetAnimation();
-              }}
-            />
-          </View>
-
-          <View style={styles.sunContainer}>
-            <Button
-              style={styles.playStyle}
-              title=""
-              onPress={() => {
-                this.setState({currentAnimation: 'sun'});
-                this.alertBox();
-                // this.resetAnimation();
-              }}
-            />
-          </View>
-
-          <View style={styles.benchmarkContainer}>
-            <Button
-              style={styles.playStyle}
-              title=""
-              onPress={() => {
-                this.setState({currentAnimation: 'benchmark'});
-                this.alertBox();
-                // this.resetAnimation();
-              }}
-            />
-          </View>
-
-          <View style={styles.clinicContainer}>
-            <Button
-              style={styles.playStyle}
-              title=""
-              onPress={() => {
-                this.setState({currentAnimation: 'jets'});
-                this.alertBox();
-                // this.resetAnimation();
-              }}
-            />
-          </View>
-
-          {/* </TouchableOpacity> */}
+              //
+              // // this.resetAnimation();
+            }}
+          />
         </View>
-      </ImageBackground>
+
+        <View style={styles.jetsContainer}>
+          <Button
+            style={styles.pharmaStyle}
+            title=""
+            onPress={() => {
+              this.setState({currentAnimation: 'helicopter'});
+              this.setModalVisible(true);
+
+              // this.alertBox();
+              // this.resetAnimation();
+            }}
+          />
+        </View>
+
+        <View style={styles.sunContainer}>
+          <Button
+            style={styles.playStyle}
+            title=""
+            onPress={() => {
+              this.setState({currentAnimation: 'sun'});
+              this.setModalVisible(true);
+
+              // this.alertBox();
+              // this.resetAnimation();
+            }}
+          />
+        </View>
+
+        <View style={styles.benchmarkContainer}>
+          <Button
+            style={styles.playStyle}
+            title=""
+            onPress={() => {
+              this.setState({currentAnimation: 'benchmark'});
+              this.setModalVisible(true);
+
+              // this.alertBox();
+              // this.resetAnimation();
+            }}
+          />
+        </View>
+
+        <View style={styles.clinicContainer}>
+          <Button
+            style={styles.playStyle}
+            title=""
+            onPress={() => {
+              this.setState({currentAnimation: 'jets'});
+              this.setModalVisible(true);
+
+              // this.alertBox();
+              // this.resetAnimation();
+            }}
+          />
+        </View>
+
+        {/* </TouchableOpacity> */}
+      </View>
     );
   }
 }
@@ -269,7 +289,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     // color: 'tomato',
   },
-
+  infoModal: {
+    marginLeft: 50,
+    marginRight: 50,
+  },
+  infoModalButton: {
+    marginTop: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
   benchmarkContainer: {
     position: 'absolute',
 
@@ -319,5 +347,47 @@ const styles = StyleSheet.create({
   playStyle: {
     // position: 'absolute',
     // paddingTop: 100,
+  },
+
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
   },
 });
