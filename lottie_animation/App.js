@@ -21,7 +21,11 @@ const clinic = require('./assets/clinic-animation.json');
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {currentAnimation: 'helicopter', modalVisible: false};
+    this.state = {
+      currentAnimation: 'helicopter',
+      modalVisible: false,
+      hideButtons: true,
+    };
   }
   componentDidMount() {
     // this.playAnimation();
@@ -66,9 +70,7 @@ export default class App extends React.Component {
   };
 
   render() {
-    const {modalVisible} = this.state;
-
-    const {currentAnimation} = this.state;
+    const {modalVisible, currentAnimation, hideButtons} = this.state;
 
     return (
       <View style={styles.animationContainer}>
@@ -87,6 +89,7 @@ export default class App extends React.Component {
                 style={[styles.button, styles.buttonClose]}
                 onPress={() => {
                   this.setModalVisible(!modalVisible);
+                  this.setState({hideButtons: false});
                   this.playAnimation();
                 }}>
                 <Text style={styles.textStyle}>play</Text>
@@ -121,7 +124,12 @@ export default class App extends React.Component {
           ref={animation => {
             this.animation = animation;
           }}
-          loop={true}
+          loop={false}
+          duration={5000}
+          onAnimationFinish={() => {
+            this.setState({hideButtons: true});
+          }}
+
           // autoPlay={false}
         />
 
@@ -163,76 +171,79 @@ export default class App extends React.Component {
             // OR find more Lottie files @ https://lottiefiles.com/featured
             // Just click the one you like, place that file in the 'assets' folder to the left, and replace the above 'require' statement
           /> */}
-        <View style={styles.buttonContainer}>
-          <Button
-            style={styles.pharmaStyle}
-            title=""
-            onPress={() => {
-              this.setState({currentAnimation: 'pharma'});
-              this.setModalVisible(true);
-              // this.alertBox();
+        {!modalVisible && hideButtons && (
+          <>
+            <View style={styles.buttonContainer}>
+              <Button
+                style={styles.pharmaStyle}
+                title=""
+                onPress={() => {
+                  this.setState({currentAnimation: 'pharma'});
+                  this.setModalVisible(true);
+                  // this.alertBox();
 
-              //
-              // // this.resetAnimation();
-            }}
-          />
-        </View>
+                  //
+                  // // this.resetAnimation();
+                }}
+              />
+            </View>
 
-        <View style={styles.jetsContainer}>
-          <Button
-            style={styles.pharmaStyle}
-            title=""
-            onPress={() => {
-              this.setState({currentAnimation: 'helicopter'});
-              this.setModalVisible(true);
+            <View style={styles.jetsContainer}>
+              <Button
+                style={styles.pharmaStyle}
+                title=""
+                onPress={() => {
+                  this.setState({currentAnimation: 'helicopter'});
+                  this.setModalVisible(true);
+                  // this.alertBox();
+                  // this.resetAnimation();
+                }}
+              />
+            </View>
 
-              // this.alertBox();
-              // this.resetAnimation();
-            }}
-          />
-        </View>
+            <View style={styles.sunContainer}>
+              <Button
+                style={styles.playStyle}
+                title=""
+                onPress={() => {
+                  this.setState({currentAnimation: 'sun'});
+                  this.setModalVisible(true);
 
-        <View style={styles.sunContainer}>
-          <Button
-            style={styles.playStyle}
-            title=""
-            onPress={() => {
-              this.setState({currentAnimation: 'sun'});
-              this.setModalVisible(true);
+                  // this.alertBox();
+                  // this.resetAnimation();
+                }}
+              />
+            </View>
 
-              // this.alertBox();
-              // this.resetAnimation();
-            }}
-          />
-        </View>
+            <View style={styles.benchmarkContainer}>
+              <Button
+                style={styles.playStyle}
+                title=""
+                onPress={() => {
+                  this.setState({currentAnimation: 'clinic'});
+                  this.setModalVisible(true);
 
-        <View style={styles.benchmarkContainer}>
-          <Button
-            style={styles.playStyle}
-            title=""
-            onPress={() => {
-              this.setState({currentAnimation: 'clinic'});
-              this.setModalVisible(true);
+                  // this.alertBox();
+                  // this.resetAnimation();
+                }}
+              />
+            </View>
 
-              // this.alertBox();
-              // this.resetAnimation();
-            }}
-          />
-        </View>
+            <View style={styles.clinicContainer}>
+              <Button
+                style={styles.playStyle}
+                title=""
+                onPress={() => {
+                  this.setState({currentAnimation: 'jets'});
+                  this.setModalVisible(true);
 
-        <View style={styles.clinicContainer}>
-          <Button
-            style={styles.playStyle}
-            title=""
-            onPress={() => {
-              this.setState({currentAnimation: 'jets'});
-              this.setModalVisible(true);
-
-              // this.alertBox();
-              // this.resetAnimation();
-            }}
-          />
-        </View>
+                  // this.alertBox();
+                  // this.resetAnimation();
+                }}
+              />
+            </View>
+          </>
+        )}
 
         {/* </TouchableOpacity> */}
       </View>
@@ -259,8 +270,8 @@ const styles = StyleSheet.create({
     // marginRight: 40,
     position: 'absolute',
 
-    top: 640,
-    left: 235,
+    top: 660,
+    left: 240,
     // width: 100,
     // height: 50,
     width: 25,
@@ -269,7 +280,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     borderRadius: 100,
-    backgroundColor: 'blue',
+    backgroundColor: 'lightcoral',
     // color: 'tomato',
   },
 
@@ -286,7 +297,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     borderRadius: 100,
-    backgroundColor: 'red',
+    backgroundColor: 'lightcoral',
     // color: 'tomato',
   },
   infoModal: {
@@ -302,7 +313,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
 
     top: 500,
-    left: 130,
+    left: 120,
     // width: 100,
     // height: 50,
     width: 25,
@@ -310,7 +321,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 100,
-    backgroundColor: 'orange',
+    backgroundColor: 'lightcoral',
     // color: 'tomato',
   },
 
@@ -326,7 +337,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 100,
-    backgroundColor: 'black',
+    backgroundColor: 'lightcoral',
     // color: 'tomato',
   },
 
@@ -342,7 +353,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 100,
-    backgroundColor: 'brown',
+    backgroundColor: 'lightcoral',
   },
   playStyle: {
     // position: 'absolute',
