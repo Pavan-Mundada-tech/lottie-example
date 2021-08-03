@@ -1,18 +1,16 @@
-/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {
-  Button,
   StyleSheet,
   View,
   Modal,
   Alert,
   Pressable,
   Text,
+  TouchableOpacity,
 } from 'react-native';
 import LottieView from 'lottie-react-native';
-
+import TouchPoint from './TouchPoint';
 const helicopter = require('./assets/helicopter-animation.json');
-const benchmark = require('./assets/plane-animation.json');
 const sun = require('./assets/sun-animation.json');
 const pharma = require('./assets/pharma-animation.json');
 const jets = require('./assets/bsw-animation.json');
@@ -27,44 +25,23 @@ export default class App extends React.Component {
       hideButtons: true,
     };
   }
-  componentDidMount() {
-    // this.playAnimation();
-    // Or set a specific startFrame and endFrame with:
-  }
 
   playAnimation = () => {
-    this.resetAnimation();
-
     this.animation.play();
   };
 
-  resetAnimation = () => {
-    this.animation.reset();
+  buttons = (buttonContainer, resetAnimation) => {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={() => {
+          this.setState({currentAnimation: resetAnimation});
+          this.setModalVisible(true);
+        }}>
+        <TouchPoint container={buttonContainer} />
+      </TouchableOpacity>
+    );
   };
-
-  alertBox = () => {
-    // console.log('xyz')
-  };
-
-  // passAnimation = () => {
-  //   switch (this.state.currentAnimation) {
-  //     case 'pharma':
-  //       pharma;
-  //       break;
-  //     case 'helicopter':
-  //       helicopter;
-  //       break;
-  //     case 'benchmark':
-  //       benchmark;
-  //       break;
-  //     case 'jets':
-  //       jets;
-  //       break;
-  //     default:
-  //       'sun';
-  //       sun;
-  //   }
-  // };
   setModalVisible = visible => {
     this.setState({modalVisible: visible});
   };
@@ -103,15 +80,11 @@ export default class App extends React.Component {
             </View>
           </View>
         </Modal>
-        {/* <TouchableOpacity onPress={this.alertBox} activeOpacity={0.9}> */}
 
         <LottieView
-          // source={this.passAnimation()}
           source={
             currentAnimation === 'helicopter'
               ? helicopter
-              : currentAnimation === 'benchmark'
-              ? benchmark
               : currentAnimation === 'pharma'
               ? pharma
               : currentAnimation === 'jets'
@@ -120,7 +93,6 @@ export default class App extends React.Component {
               ? clinic
               : sun
           }
-          // resizeMode="cover"
           ref={animation => {
             this.animation = animation;
           }}
@@ -129,123 +101,17 @@ export default class App extends React.Component {
           onAnimationFinish={() => {
             this.setState({hideButtons: true});
           }}
-
-          // autoPlay={false}
         />
 
-        {/* <LottieView
-            ref={animation => {
-              this.animation = animation;
-            }}
-            resizeMode="contain"
-            speed={1} //we can control the speed of an animation.Sending a negative value will reverse the animation
-            progress={0} //A number between 0 and 1, or an Animated number between 0 and 1. This number represents the normalized progress of the animation. If you update this prop, the animation will correspondingly update to the frame at that progress value. This prop is not required if you are using the imperative API.
-            style={{
-              width: 400,
-              height: 215,
-              backgroundColor: '#eee',
-            }}
-            // source={require('./assets/cycle.json')}
-            source={helicopter}
-            loop={true}
-
-            // OR find more Lottie files @ https://lottiefiles.com/featured
-            // Just click the one you like, place that file in the 'assets' folder to the left, and replace the above 'require' statement
-          /> */}
-        {/* <LottieView
-            ref={animation => {
-              this.animation = animation;
-            }}
-            // resizeMode=""
-            speed={1} //we can control the speed of an animation.Sending a negative value will reverse the animation
-            progress={0} //A number between 0 and 1, or an Animated number between 0 and 1. This number represents the normalized progress of the animation. If you update this prop, the animation will correspondingly update to the frame at that progress value. This prop is not required if you are using the imperative API.
-            style={{
-              width: 400,
-              height: 215,
-              backgroundColor: '#eee',
-            }}
-            // source={require('./assets/cycle.json')}
-            source={pharma}
-            loop={true}
-
-            // OR find more Lottie files @ https://lottiefiles.com/featured
-            // Just click the one you like, place that file in the 'assets' folder to the left, and replace the above 'require' statement
-          /> */}
         {!modalVisible && hideButtons && (
           <>
-            <View style={styles.buttonContainer}>
-              <Button
-                style={styles.pharmaStyle}
-                title=""
-                onPress={() => {
-                  this.setState({currentAnimation: 'pharma'});
-                  this.setModalVisible(true);
-                  // this.alertBox();
-
-                  //
-                  // // this.resetAnimation();
-                }}
-              />
-            </View>
-
-            <View style={styles.jetsContainer}>
-              <Button
-                style={styles.pharmaStyle}
-                title=""
-                onPress={() => {
-                  this.setState({currentAnimation: 'helicopter'});
-                  this.setModalVisible(true);
-                  // this.alertBox();
-                  // this.resetAnimation();
-                }}
-              />
-            </View>
-
-            <View style={styles.sunContainer}>
-              <Button
-                style={styles.playStyle}
-                title=""
-                onPress={() => {
-                  this.setState({currentAnimation: 'sun'});
-                  this.setModalVisible(true);
-
-                  // this.alertBox();
-                  // this.resetAnimation();
-                }}
-              />
-            </View>
-
-            <View style={styles.benchmarkContainer}>
-              <Button
-                style={styles.playStyle}
-                title=""
-                onPress={() => {
-                  this.setState({currentAnimation: 'clinic'});
-                  this.setModalVisible(true);
-
-                  // this.alertBox();
-                  // this.resetAnimation();
-                }}
-              />
-            </View>
-
-            <View style={styles.clinicContainer}>
-              <Button
-                style={styles.playStyle}
-                title=""
-                onPress={() => {
-                  this.setState({currentAnimation: 'jets'});
-                  this.setModalVisible(true);
-
-                  // this.alertBox();
-                  // this.resetAnimation();
-                }}
-              />
-            </View>
+            {this.buttons(styles.pharmaContainer, 'pharma')}
+            {this.buttons(styles.helicopterContainer, 'helicopter')}
+            {this.buttons(styles.sunContainer, 'sun')}
+            {this.buttons(styles.clinicContainer, 'clinic')}
+            {this.buttons(styles.jetsContainer, 'jets')}
           </>
         )}
-
-        {/* </TouchableOpacity> */}
       </View>
     );
   }
@@ -253,53 +119,14 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
   animationContainer: {
-    // backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
     flex: 1,
   },
+
   image: {
     flex: 1,
     justifyContent: 'center',
   },
-  buttonContainer: {
-    // flexDirection: 'row',
-    // justifyContent: 'center',
-    // position: 'absolute',
-    // paddingTop: 30,
-    // marginRight: 40,
-    position: 'absolute',
 
-    top: 660,
-    left: 240,
-    // width: 100,
-    // height: 50,
-    width: 25,
-    height: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 10,
-    borderRadius: 100,
-    backgroundColor: 'lightcoral',
-    // color: 'tomato',
-  },
-
-  jetsContainer: {
-    position: 'absolute',
-
-    top: 210,
-    left: 265,
-    // width: 100,
-    // height: 50,
-    width: 25,
-    height: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 10,
-    borderRadius: 100,
-    backgroundColor: 'lightcoral',
-    // color: 'tomato',
-  },
   infoModal: {
     marginLeft: 50,
     marginRight: 50,
@@ -309,55 +136,33 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
   },
-  benchmarkContainer: {
+  clinicContainer: {
     position: 'absolute',
-
-    top: 500,
-    left: 120,
-    // width: 100,
-    // height: 50,
-    width: 25,
-    height: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 100,
-    backgroundColor: 'lightcoral',
-    // color: 'tomato',
+    top: 470,
+    left: 110,
   },
 
   sunContainer: {
     position: 'absolute',
-
-    top: 50,
-    left: 230,
-    // width: 100,
-    // height: 50,
-    width: 25,
-    height: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 100,
-    backgroundColor: 'lightcoral',
-    // color: 'tomato',
+    top: 40,
+    left: 220,
   },
 
-  clinicContainer: {
+  jetsContainer: {
     position: 'absolute',
-
-    top: 180,
-    left: 80,
-    // width: 100,
-    // height: 50,
-    width: 25,
-    height: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 100,
-    backgroundColor: 'lightcoral',
+    top: 160,
+    left: 60,
   },
-  playStyle: {
-    // position: 'absolute',
-    // paddingTop: 100,
+  pharmaContainer: {
+    position: 'absolute',
+    top: 640,
+    left: 230,
+  },
+
+  helicopterContainer: {
+    position: 'absolute',
+    top: 200,
+    left: 240,
   },
 
   centeredView: {
